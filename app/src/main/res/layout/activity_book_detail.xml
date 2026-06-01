@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_cream"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="8dp">
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="8dp"
+            android:src="@drawable/ic_arrow_back"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/cancel" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ListView
+            android:id="@+id/listReviews"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:divider="@null"
+            android:listSelector="@android:color/transparent"
+            android:paddingHorizontal="@dimen/screen_margin"
+            android:paddingBottom="88dp"
+            android:scrollbars="none" />
+
+        <ImageView
+            android:id="@+id/fabWrite"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="20dp"
+            android:background="@drawable/bg_fab"
+            android:elevation="6dp"
+            android:padding="14dp"
+            android:src="@drawable/ic_add"
+            android:contentDescription="@string/write_review" />
+    </FrameLayout>
+
+    <include layout="@layout/include_bottom_nav" />
+</LinearLayout>

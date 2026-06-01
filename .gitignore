@@ -13,3 +13,7 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Claude Code (개인 도구 파일 — 협업 저장소에 포함하지 않음)
+CLAUDE.md
+.claude/

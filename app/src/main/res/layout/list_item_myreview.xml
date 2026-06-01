@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/bg_card"
+    android:padding="@dimen/card_padding"
+    android:layout_marginBottom="@dimen/card_gap">
+
+    <ImageView
+        android:id="@+id/ivCover"
+        android:layout_width="@dimen/cover_w"
+        android:layout_height="@dimen/cover_h"
+        android:scaleType="centerCrop"
+        android:src="@drawable/cover_placeholder"
+        android:contentDescription="@string/my_reviews" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="12dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text="제목"
+            android:textColor="@color/text_title"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+        <RatingBar
+            android:id="@+id/rbRating"
+            style="@style/RatingBar.Amber.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp" />
+
+        <TextView
+            android:id="@+id/tvContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:text="한줄평"
+            android:textColor="@color/text_body"
+            android:textSize="@dimen/text_body" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:src="@drawable/ic_calendar"
+                android:contentDescription="@string/my_reviews" />
+            <TextView
+                android:id="@+id/tvDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="2026.05.18"
+                android:textColor="@color/text_sub"
+                android:textSize="@dimen/text_sub" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

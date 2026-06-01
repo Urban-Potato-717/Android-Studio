@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/ivCover"
+            android:layout_width="96dp"
+            android:layout_height="132dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/cover_placeholder"
+            android:contentDescription="@string/reviews" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="14dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="제목"
+                android:textColor="@color/text_title"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvAuthor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="저자"
+                android:textColor="@color/text_body"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvPublisher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="출판사 · 2014"
+                android:textColor="@color/text_sub"
+                android:textSize="13sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/tvGenre"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_chip"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="4dp"
+                    android:text="소설"
+                    android:textColor="@color/text_body"
+                    android:textSize="12sp" />
+                <TextView
+                    android:id="@+id/tvPages"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="216쪽"
+                    android:textColor="@color/text_sub"
+                    android:textSize="13sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- 평균 별점 카드 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@drawable/bg_card"
+        android:padding="20dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/tvAvg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0.0"
+                    android:textColor="@color/text_title"
+                    android:textSize="34sp"
+                    android:textStyle="bold" />
+                <ImageView
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:layout_marginStart="6dp"
+                    android:src="@drawable/star_amber"
+                    android:contentDescription="@string/reviews" />
+            </LinearLayout>
+            <TextView
+                android:id="@+id/tvReviewCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="0개의 리뷰"
+                android:textColor="@color/text_sub"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <RatingBar
+            android:id="@+id/rbAvg"
+            style="@style/RatingBar.Amber.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="24dp"
+            android:maxHeight="24dp" />
+    </LinearLayout>
+
+    <!-- 리뷰 헤더 + 정렬 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/reviews"
+            android:textColor="@color/text_title"
+            android:textSize="@dimen/text_title"
+            android:textStyle="bold" />
+        <Spinner
+            android:id="@+id/spSort"
+            android:layout_width="130dp"
+            android:layout_height="44dp"
+            android:background="@drawable/bg_input" />
+    </LinearLayout>
+</LinearLayout>
