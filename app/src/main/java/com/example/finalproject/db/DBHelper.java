@@ -253,6 +253,34 @@ public class DBHelper extends SQLiteOpenHelper {
         return insertBook(db, title, author, publisher, year, genre, pages, cover, tagline, 0, 0);
     }
 
+    /** 아직 실제 표지(http)를 받지 못한 시드 책들 (id+title만 채움) */
+    public List<Book> getBooksWithoutRealCover() {
+        List<Book> list = new ArrayList<>();
+        Cursor c = getReadableDatabase().rawQuery(
+                "SELECT book_id, title, author FROM books " +
+                "WHERE cover IS NULL OR cover NOT LIKE 'http%'", null);
+        while (c.moveToNext()) {
+            Book b = new Book();
+            b.id = c.getLong(0);
+            b.title = c.getString(1);
+            b.author = c.getString(2);
+            list.add(b);
+        }
+        c.close();
+        return list;
+    }
+
+    /** 카카오에서 받은 메타데이터로 책을 갱신 (빈 값은 기존 값 유지) */
+    public void updateBookMeta(long bookId, String publisher, String year, String cover) {
+        ContentValues v = new ContentValues();
+        if (publisher != null && !publisher.isEmpty()) v.put("publisher", publisher);
+        if (year != null && !year.isEmpty()) v.put("pub_year", year);
+        if (cover != null && !cover.isEmpty()) v.put("cover", cover);
+        if (v.size() == 0) return;
+        getWritableDatabase().update("books", v, "book_id=?",
+                new String[]{String.valueOf(bookId)});
+    }
+
     // ---------------- 리뷰 ----------------
 
     public List<Review> getReviewsForBook(long bookId, boolean sortByRating) {
