@@ -4,15 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.finalproject.adapter.ReviewAdapter;
@@ -59,19 +57,18 @@ public class BookDetailActivity extends AppCompatActivity {
         tvReviewCount = header.findViewById(R.id.tvReviewCount);
         rbAvg = header.findViewById(R.id.rbAvg);
 
-        Spinner spSort = header.findViewById(R.id.spSort);
-        ArrayAdapter<CharSequence> sortAdapter = ArrayAdapter.createFromResource(
-                this, R.array.sort_options, android.R.layout.simple_spinner_item);
-        sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spSort.setAdapter(sortAdapter);
-        spSort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                sortByRating = (position == 1);
-                loadReviews();
-            }
-            @Override public void onNothingSelected(AdapterView<?> parent) {}
-        });
+        TextView tvSort = header.findViewById(R.id.tvSort);
+        final CharSequence[] sortOptions = getResources().getTextArray(R.array.sort_options);
+        tvSort.setText(sortOptions[sortByRating ? 1 : 0]);
+        tvSort.setOnClickListener(v -> new AlertDialog.Builder(this)
+                .setTitle(R.string.sort_title)
+                .setSingleChoiceItems(sortOptions, sortByRating ? 1 : 0, (dialog, which) -> {
+                    sortByRating = (which == 1);
+                    tvSort.setText(sortOptions[which]);
+                    loadReviews();
+                    dialog.dismiss();
+                })
+                .show());
 
         reviewAdapter = new ReviewAdapter(this, new java.util.ArrayList<>());
         listReviews.setAdapter(reviewAdapter);

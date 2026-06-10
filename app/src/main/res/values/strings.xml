@@ -50,6 +50,7 @@
     <string name="btn_logout">로그아웃</string>
 
     <!-- 정렬 -->
+    <string name="sort_title">정렬 기준</string>
     <string name="sort_latest">최신순</string>
     <string name="sort_rating">별점순</string>
 </resources>
