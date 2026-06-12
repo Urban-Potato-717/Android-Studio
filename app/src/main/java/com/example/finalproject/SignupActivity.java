@@ -15,6 +15,7 @@ public class SignupActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //layout 화면 연결
         setContentView(R.layout.activity_signup);
 
         EditText etUsername = findViewById(R.id.etUsername);
@@ -23,6 +24,7 @@ public class SignupActivity extends AppCompatActivity {
         EditText etPasswordConfirm = findViewById(R.id.etPasswordConfirm);
         Button btnSignup = findViewById(R.id.btnSignup);
 
+        //회원가입 버튼 OnClickListner
         btnSignup.setOnClickListener(v -> {
             String username = etUsername.getText().toString().trim();
             String nickname = etNickname.getText().toString().trim();
@@ -39,6 +41,7 @@ public class SignupActivity extends AppCompatActivity {
                 return;
             }
 
+            //회원가입 요청 실제 저장 - DBHelper.signup() 호출
             long id = DBHelper.get(this).signup(username, password, nickname);
             if (id == -1) {
                 Toast.makeText(this, "이미 사용 중인 아이디입니다.", Toast.LENGTH_SHORT).show();

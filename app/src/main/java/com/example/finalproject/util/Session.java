@@ -5,12 +5,14 @@ import android.content.SharedPreferences;
 
 import com.example.finalproject.model.User;
 
+//세션 클래스 - 로그인한 사용자 정보 저장 및 꺼내기
 public class Session {
     private static final String PREF = "booklog_session";
     private static final String K_UID = "user_id";
     private static final String K_NAME = "username";
     private static final String K_NICK = "nickname";
 
+    //로그인 한 정보를 SharedPreferences에 저장
     private static SharedPreferences prefs(Context c) {
         return c.getSharedPreferences(PREF, Context.MODE_PRIVATE);
     }
@@ -27,6 +29,7 @@ public class Session {
         prefs(c).edit().clear().apply();
     }
 
+    //로그인은 boolean 값으로 사용 - 값이 -1이 아니면 로그인 된 상태 판단
     public static boolean isLoggedIn(Context c) {
         return prefs(c).getLong(K_UID, -1) != -1;
     }

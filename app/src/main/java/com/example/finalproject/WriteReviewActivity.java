@@ -23,6 +23,7 @@ import java.util.Locale;
 
 public class WriteReviewActivity extends AppCompatActivity {
 
+    // 어떤 책에 리뷰를 작성하는지 구분하기 위해 상세 화면에서 받은 book_id를 저장한다.
     private long bookId;
 
     @Override
@@ -30,6 +31,7 @@ public class WriteReviewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_write_review);
 
+        // BookDetailActivity가 넘긴 book_id가 없으면 어떤 책의 리뷰인지 알 수 없으므로 화면을 종료한다.
         bookId = getIntent().getLongExtra("book_id", -1);
         if (bookId == -1) {
             finish();
@@ -43,6 +45,7 @@ public class WriteReviewActivity extends AppCompatActivity {
         CheckBox cbSpoiler = findViewById(R.id.cbSpoiler);
         Button btnSave = findViewById(R.id.btnSave);
 
+        // 작성 화면 상단에도 책 제목과 표지를 보여주기 위해 DB에서 책 정보를 조회한다.
         Book b = DBHelper.get(this).getBook(bookId);
         if (b != null) {
             Covers.load(ivCover, b.cover);
@@ -55,6 +58,7 @@ public class WriteReviewActivity extends AppCompatActivity {
             float rating = rbInput.getRating();
             String content = etContent.getText().toString().trim();
 
+            // 별점과 한줄평은 리뷰 저장에 꼭 필요한 값이므로 저장 전에 검사한다.
             if (rating <= 0) {
                 Toast.makeText(this, "별점을 선택해 주세요.", Toast.LENGTH_SHORT).show();
                 return;
@@ -65,6 +69,7 @@ public class WriteReviewActivity extends AppCompatActivity {
             }
 
             String today = new SimpleDateFormat("yyyy.MM.dd", Locale.KOREA).format(new Date());
+            // 현재 로그인 사용자의 id와 nickname은 Session에서 가져와 reviews 테이블에 함께 저장한다.
             DBHelper.get(this).insertReview(
                     bookId,
                     Session.userId(this),
@@ -75,6 +80,7 @@ public class WriteReviewActivity extends AppCompatActivity {
                     today);
 
             Toast.makeText(this, "리뷰가 저장되었습니다.", Toast.LENGTH_SHORT).show();
+            // 저장 후 작성 화면을 닫으면 BookDetailActivity의 onResume()이 실행되어 리뷰 목록이 갱신된다.
             finish();
         });
     }

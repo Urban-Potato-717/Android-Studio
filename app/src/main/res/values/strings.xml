@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">BookLog</string>
     <string name="app_tagline">책을 읽고, 기록하고, 나누다</string>
+    <string name="school_logo_desc">성결대학교 로고</string>
 
     <!-- 하단 탭 -->
     <string name="tab_home">홈</string>

@@ -27,6 +27,7 @@ public class ReviewAdapter extends BaseAdapter {
 
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
+        // DB에서 새로 가져온 리뷰 목록을 화면에 다시 그리라고 ListView에 알린다.
         notifyDataSetChanged();
     }
 
@@ -48,6 +49,7 @@ public class ReviewAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
+            // list_item_review.xml 하나를 리뷰 한 개의 화면으로 만들어 재사용한다.
             convertView = LayoutInflater.from(context).inflate(R.layout.list_item_review, parent, false);
         }
         Review r = reviews.get(position);
@@ -66,6 +68,8 @@ public class ReviewAdapter extends BaseAdapter {
         tvContent.setText(r.content);
         tvHelpful.setText(context.getString(R.string.helpful_format, r.helpfulCount));
 
+        // isSpoiler는 DB에 저장된 값이고, revealed는 현재 화면에서만 쓰는 임시 공개 상태이다.
+        // 스포일러인데 아직 공개하지 않았다면 실제 내용 영역을 숨기고 안내 영역을 보여준다.
         boolean blinded = r.isSpoiler && !r.revealed;
         if (blinded) {
             groupContent.setVisibility(View.GONE);
@@ -82,6 +86,8 @@ public class ReviewAdapter extends BaseAdapter {
     }
 
     private void showSpoilerDialog(Review r) {
+        // 사용자가 확인을 누른 경우에만 revealed를 true로 바꾸고 리스트를 다시 그린다.
+        // revealed는 DB에 저장하지 않으므로 화면을 새로 열면 다시 가려진 상태가 된다.
         new AlertDialog.Builder(context)
                 .setTitle(R.string.spoiler_dialog_title)
                 .setMessage(R.string.spoiler_dialog_msg)

@@ -27,6 +27,7 @@ public class BookAdapter extends BaseAdapter {
 
     public void setBooks(List<Book> books) {
         this.books = books;
+        // HomeActivity/SearchActivity에서 새 책 목록을 넘기면 ListView를 다시 그린다.
         notifyDataSetChanged();
     }
 
@@ -48,6 +49,7 @@ public class BookAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
+            // list_item_book.xml 하나가 책 카드 한 개가 된다.
             convertView = LayoutInflater.from(context).inflate(R.layout.list_item_book, parent, false);
         }
         Book b = books.get(position);
@@ -60,6 +62,7 @@ public class BookAdapter extends BaseAdapter {
         TextView tvReviewCount = convertView.findViewById(R.id.tvReviewCount);
         TextView tvQuote = convertView.findViewById(R.id.tvQuote);
 
+        // cover 값이 drawable 이름이든 URL이든 Covers.load()가 구분해서 ImageView에 넣는다.
         Covers.load(ivCover, b.cover);
         tvTitle.setText(b.title);
         tvAuthor.setText(b.author);

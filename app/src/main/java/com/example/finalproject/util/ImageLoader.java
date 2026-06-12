@@ -19,6 +19,7 @@ public class ImageLoader {
     private static final Handler MAIN = new Handler(Looper.getMainLooper());
 
     public static void load(ImageView view, String url) {
+        // ListView는 화면 밖으로 나간 ImageView를 재사용하므로 현재 URL을 tag에 저장해 둔다.
         view.setTag(url);
         POOL.execute(() -> {
             Bitmap bmp = download(url);
@@ -35,6 +36,7 @@ public class ImageLoader {
     private static Bitmap download(String urlStr) {
         HttpURLConnection conn = null;
         try {
+            // URL 이미지를 HTTP로 받아 Bitmap으로 변환한다.
             URL url = new URL(urlStr);
             conn = (HttpURLConnection) url.openConnection();
             conn.setConnectTimeout(5000);

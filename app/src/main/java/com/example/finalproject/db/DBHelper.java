@@ -76,7 +76,6 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     // ---------------- 시드 데이터 ----------------
-
     private void seed(SQLiteDatabase db) {
         // 데모 계정 (아이디: demo / 비번: demo)
         long demoId = insertUser(db, "demo", Pw.hash("demo"), "김준영");
@@ -84,13 +83,13 @@ public class DBHelper extends SQLiteOpenHelper {
         long bTrend = insertBook(db, "트렌드 코리아 2026", "김난도 외", "미래의창",
                 "2025", "경제경영", 384, "cover_placeholder",
                 "2026 흐름을 빠르게 파악하기 좋은 책.", 210, 4.3 * 210);
-        long bDark = insertBook(db, "다크 심리학", "다크 사이드 프로젝트", "위즈덤하우스",
+        insertBook(db, "다크 심리학", "다크 사이드 프로젝트", "위즈덤하우스",
                 "2024", "심리", 320, "cover_placeholder",
                 "사람의 심리를 실전적으로 이해하기 좋다.", 76, 4.4 * 76);
         long bHonmono = insertBook(db, "혼모노", "성해나", "창비",
                 "2025", "소설", 280, "cover_placeholder",
                 "인물들의 감정선이 강렬하고 현실적이다.", 94, 4.5 * 94);
-        long bGeupryu = insertBook(db, "급류", "정대건", "민음사",
+        insertBook(db, "급류", "정대건", "민음사",
                 "2022", "소설", 240, "cover_placeholder",
                 "잔잔한 문장 속 감정의 파도가 오래 남는다.", 128, 4.6 * 128);
         long bSonyeon = insertBook(db, "소년이 온다", "한강", "창비",
@@ -155,7 +154,6 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     // ---------------- 사용자 ----------------
-
     public boolean usernameExists(String username) {
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT 1 FROM users WHERE username=?", new String[]{username});
@@ -167,6 +165,7 @@ public class DBHelper extends SQLiteOpenHelper {
     /** @return 새 user_id, 이미 존재하면 -1 */
     public long signup(String username, String password, String nickname) {
         if (usernameExists(username)) return -1;
+        //Pw.hash()는 비밀번호를 평문이 아닌 SHA-256 해시로 저장.
         return insertUser(getWritableDatabase(), username, Pw.hash(password), nickname);
     }
 
@@ -185,7 +184,8 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     // ---------------- 책 ----------------
-
+    // 책 목록/상세 화면에서 공통으로 쓰는 집계 SELECT문이다.
+    // books의 기본 리뷰 수(base_count/base_sum)와 실제 reviews 테이블의 리뷰를 합쳐 평균 별점을 계산한다.
     private static final String BOOK_AGG_SELECT =
             "SELECT b.book_id, b.title, b.author, b.publisher, b.pub_year, b.genre, " +
             "b.page_count, b.cover, b.tagline, " +
@@ -194,6 +194,8 @@ public class DBHelper extends SQLiteOpenHelper {
             "FROM books b LEFT JOIN reviews r ON r.book_id = b.book_id ";
 
     private Book mapBook(Cursor c) {
+        // Cursor의 컬럼 값을 Book 객체 필드로 옮긴다.
+        // DBHelper 밖의 Activity/Adapter는 Cursor를 직접 다루지 않고 Book 객체만 사용한다.
         Book b = new Book();
         b.id = c.getLong(0);
         b.title = c.getString(1);
@@ -209,19 +211,23 @@ public class DBHelper extends SQLiteOpenHelper {
         b.avgRating = b.reviewCount > 0 ? sum / b.reviewCount : 0;
         return b;
     }
-
+    
+    //인기 도서
     public List<Book> getPopularBooks() {
         List<Book> list = new ArrayList<>();
         Cursor c = getReadableDatabase().rawQuery(
+                // total_count, 즉 "리뷰 수"로 인기 도서 목록의 책을 추림.
                 BOOK_AGG_SELECT + "GROUP BY b.book_id ORDER BY total_count DESC", null);
         while (c.moveToNext()) list.add(mapBook(c));
         c.close();
         return list;
     }
-
+    
+    //도서 검색시 LIKE 검색 결과 표시
     public List<Book> searchBooks(String query) {
         List<Book> list = new ArrayList<>();
         Cursor c = getReadableDatabase().rawQuery(
+                // 홈 검색창 입력 중에는 외부 API가 아니라 books 테이블의 제목만 LIKE로 검색한다.
                 BOOK_AGG_SELECT + "WHERE b.title LIKE ? GROUP BY b.book_id ORDER BY total_count DESC",
                 new String[]{"%" + query + "%"});
         while (c.moveToNext()) list.add(mapBook(c));
@@ -230,6 +236,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public Book getBook(long bookId) {
+        // 상세 화면에서 전달받은 book_id 하나로 책 정보와 평균 별점/리뷰 수를 조회한다.
         Cursor c = getReadableDatabase().rawQuery(
                 BOOK_AGG_SELECT + "WHERE b.book_id=? GROUP BY b.book_id",
                 new String[]{String.valueOf(bookId)});
@@ -238,10 +245,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return b;
     }
 
-    /** 카카오 검색 결과 등 외부 책을 저장하고 book_id 반환 (제목+저자 기준 중복 방지) */
+    // 카카오 검색 결과 등 외부 책을 저장하고 book_id 반환 (제목+저자 기준 중복 방지)
     public long insertOrGetBook(String title, String author, String publisher,
                                 String year, String genre, int pages, String cover, String tagline) {
         SQLiteDatabase db = getWritableDatabase();
+        // 같은 제목+저자가 이미 있으면 새로 저장하지 않고 기존 book_id를 재사용한다.
         Cursor c = db.rawQuery("SELECT book_id FROM books WHERE title=? AND author=?",
                 new String[]{title, author});
         if (c.moveToFirst()) {
@@ -250,6 +258,7 @@ public class DBHelper extends SQLiteOpenHelper {
             return id;
         }
         c.close();
+        // DB에 없는 외부 검색 결과라면 books 테이블에 새 책으로 저장한다.
         return insertBook(db, title, author, publisher, year, genre, pages, cover, tagline, 0, 0);
     }
 
@@ -284,6 +293,8 @@ public class DBHelper extends SQLiteOpenHelper {
     // ---------------- 리뷰 ----------------
 
     public List<Review> getReviewsForBook(long bookId, boolean sortByRating) {
+        // 정렬 옵션에 따라 SQL ORDER BY만 바꿔서 다시 조회한다.
+        // 화면에서 리스트를 직접 정렬하지 않고 DB가 정렬한 결과를 가져오는 방식이다.
         String order = sortByRating ? "rating DESC, created_at DESC" : "created_at DESC";
         List<Review> list = new ArrayList<>();
         Cursor c = getReadableDatabase().rawQuery(
@@ -298,6 +309,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public List<Review> getMyReviews(long userId) {
         List<Review> list = new ArrayList<>();
         Cursor c = getReadableDatabase().rawQuery(
+                // 내 리뷰 화면은 reviews와 books를 JOIN해서 리뷰 내용과 책 제목/표지를 같이 가져온다.
                 "SELECT r.review_id, r.book_id, r.user_id, r.nickname, r.rating, r.content, " +
                 "r.is_spoiler, r.helpful_count, r.created_at, b.title, b.cover " +
                 "FROM reviews r JOIN books b ON b.book_id = r.book_id " +
@@ -314,6 +326,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public int getMyReviewCount(long userId) {
+        // 마이페이지의 리뷰 수 표시에 쓰는 현재 사용자 리뷰 개수 조회이다.
         Cursor c = getReadableDatabase().rawQuery(
                 "SELECT COUNT(*) FROM reviews WHERE user_id=?",
                 new String[]{String.valueOf(userId)});
@@ -322,8 +335,9 @@ public class DBHelper extends SQLiteOpenHelper {
         return n;
     }
 
-    public long insertReview(long bookId, long userId, String nickname, float rating,
+    public void insertReview(long bookId, long userId, String nickname, float rating,
                              String content, boolean spoiler, String date) {
+        // WriteReviewActivity에서 입력한 값을 reviews 테이블 컬럼에 맞춰 ContentValues에 담는다.
         ContentValues v = new ContentValues();
         v.put("book_id", bookId);
         v.put("user_id", userId);
@@ -333,10 +347,12 @@ public class DBHelper extends SQLiteOpenHelper {
         v.put("is_spoiler", spoiler ? 1 : 0);
         v.put("helpful_count", 0);
         v.put("created_at", date);
-        return getWritableDatabase().insert("reviews", null, v);
+        getWritableDatabase().insert("reviews", null, v);
     }
 
     private Review mapReview(Cursor c) {
+        // Cursor의 리뷰 컬럼을 Review 객체로 변환한다.
+        // ReviewAdapter는 이 객체의 값으로 닉네임, 별점, 날짜, 내용을 표시한다.
         Review r = new Review();
         r.id = c.getLong(0);
         r.bookId = c.getLong(1);

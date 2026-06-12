@@ -20,7 +20,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // 이미 로그인되어 있으면 바로 홈으로
+        // 이미 로그인되어 있으면 바로 홈으로 보냄
         if (Session.isLoggedIn(this)) {
             goHome();
             return;
@@ -47,7 +47,8 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(this, "아이디 또는 비밀번호가 올바르지 않습니다.", Toast.LENGTH_SHORT).show();
                 return;
             }
-
+            
+            //로그인 하면 저장 ㄱㄱ
             Session.login(this, user);
             goHome();
         });
@@ -56,7 +57,9 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(new Intent(this, SignupActivity.class)));
     }
 
+    //HomeActivity로 리다이렉션 함수
     private void goHome() {
+        //Intent: 다른 화면 이동 객체
         Intent intent = new Intent(this, HomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

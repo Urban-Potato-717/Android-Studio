@@ -27,6 +27,7 @@ public class MyReviewAdapter extends BaseAdapter {
 
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
+        // 내 리뷰 목록을 다시 조회한 뒤 화면에 반영한다.
         notifyDataSetChanged();
     }
 
@@ -48,6 +49,7 @@ public class MyReviewAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
+            // list_item_myreview.xml 하나가 내가 쓴 리뷰 카드 한 개가 된다.
             convertView = LayoutInflater.from(context).inflate(R.layout.list_item_myreview, parent, false);
         }
         Review r = reviews.get(position);
@@ -58,6 +60,7 @@ public class MyReviewAdapter extends BaseAdapter {
         TextView tvContent = convertView.findViewById(R.id.tvContent);
         TextView tvDate = convertView.findViewById(R.id.tvDate);
 
+        // DBHelper.getMyReviews()에서 JOIN으로 가져온 책 제목/표지와 리뷰 내용을 함께 표시한다.
         Covers.load(ivCover, r.bookCover);
         tvTitle.setText(r.bookTitle);
         rbRating.setRating(r.rating);

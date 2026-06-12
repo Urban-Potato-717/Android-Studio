@@ -23,7 +23,9 @@ import java.util.Locale;
 
 public class BookDetailActivity extends AppCompatActivity {
 
+    // 홈/검색/내 리뷰 화면에서 전달받은 책의 기본키이다.
     private long bookId;
+    // false면 최신순, true면 별점순으로 리뷰를 조회한다.
     private boolean sortByRating = false;
     private ReviewAdapter reviewAdapter;
 
@@ -37,6 +39,7 @@ public class BookDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_book_detail);
         BottomNav.setup(this, -1);
 
+        // 상세 화면은 Intent extra의 book_id를 기준으로 책과 리뷰를 조회한다.
         bookId = getIntent().getLongExtra("book_id", -1);
         if (bookId == -1) {
             finish();
@@ -44,6 +47,8 @@ public class BookDetailActivity extends AppCompatActivity {
         }
 
         ListView listReviews = findViewById(R.id.listReviews);
+        // ListView 상단에 책 정보 영역(detail_header.xml)을 헤더로 붙이고,
+        // 그 아래에 ReviewAdapter가 리뷰 목록을 이어서 표시한다.
         View header = LayoutInflater.from(this).inflate(R.layout.detail_header, listReviews, false);
         listReviews.addHeaderView(header, null, false);
 
@@ -62,19 +67,23 @@ public class BookDetailActivity extends AppCompatActivity {
         tvSort.setText(sortOptions[sortByRating ? 1 : 0]);
         tvSort.setOnClickListener(v -> new AlertDialog.Builder(this)
                 .setTitle(R.string.sort_title)
+                // AlertDialog 단일 선택 목록으로 정렬 기준을 고른다.
                 .setSingleChoiceItems(sortOptions, sortByRating ? 1 : 0, (dialog, which) -> {
                     sortByRating = (which == 1);
                     tvSort.setText(sortOptions[which]);
+                    // 정렬 값이 바뀌면 DB 쿼리의 ORDER BY도 바뀌므로 리뷰를 다시 조회한다.
                     loadReviews();
                     dialog.dismiss();
                 })
                 .show());
 
+        //ReviewAdapter로 리뷰 목록을 표시
         reviewAdapter = new ReviewAdapter(this, new java.util.ArrayList<>());
         listReviews.setAdapter(reviewAdapter);
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
         findViewById(R.id.fabWrite).setOnClickListener(v -> {
+            // 리뷰 작성 화면도 같은 책에 리뷰를 저장해야 하므로 book_id를 넘긴다.
             Intent intent = new Intent(this, WriteReviewActivity.class);
             intent.putExtra("book_id", bookId);
             startActivity(intent);
@@ -84,11 +93,13 @@ public class BookDetailActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        // 리뷰 작성 화면에서 돌아오면 평균 별점, 리뷰 수, 리뷰 목록이 바뀔 수 있어 다시 조회한다.
         bindBook();
         loadReviews();
     }
 
     private void bindBook() {
+        // 책 정보와 평균 별점은 DBHelper.getBook()의 집계 쿼리에서 계산된 Book 객체로 받는다.
         Book b = DBHelper.get(this).getBook(bookId);
         if (b == null) {
             Toast.makeText(this, "책 정보를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
@@ -107,6 +118,7 @@ public class BookDetailActivity extends AppCompatActivity {
     }
 
     private void loadReviews() {
+        // sortByRating 값에 따라 최신순 또는 별점순 ORDER BY로 리뷰를 다시 가져온다.
         reviewAdapter.setReviews(DBHelper.get(this).getReviewsForBook(bookId, sortByRating));
     }
 }
