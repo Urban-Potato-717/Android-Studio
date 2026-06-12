@@ -67,11 +67,11 @@ public class BookDetailActivity extends AppCompatActivity {
         tvSort.setText(sortOptions[sortByRating ? 1 : 0]);
         tvSort.setOnClickListener(v -> new AlertDialog.Builder(this)
                 .setTitle(R.string.sort_title)
-                // AlertDialog 단일 선택 목록으로 정렬 기준을 고른다.
+                // 정렬 글자를 누르면 AlertDialog의 단일 선택 목록으로 최신순/별점순을 고른다.
                 .setSingleChoiceItems(sortOptions, sortByRating ? 1 : 0, (dialog, which) -> {
                     sortByRating = (which == 1);
                     tvSort.setText(sortOptions[which]);
-                    // 정렬 값이 바뀌면 DB 쿼리의 ORDER BY도 바뀌므로 리뷰를 다시 조회한다.
+                    // 선택이 바뀌면 sortByRating 값만 바꾸고 리뷰를 다시 조회한다(ORDER BY가 바뀜).
                     loadReviews();
                     dialog.dismiss();
                 })
@@ -93,7 +93,8 @@ public class BookDetailActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // 리뷰 작성 화면에서 돌아오면 평균 별점, 리뷰 수, 리뷰 목록이 바뀔 수 있어 다시 조회한다.
+        // 리뷰 작성 화면에서 돌아오면 onResume이 실행된다. 평균 별점·리뷰 수·리뷰 목록을
+        // 캐시하지 않고 매번 DB에서 다시 계산해 가져오므로, 방금 쓴 리뷰가 즉시 반영된다.
         bindBook();
         loadReviews();
     }

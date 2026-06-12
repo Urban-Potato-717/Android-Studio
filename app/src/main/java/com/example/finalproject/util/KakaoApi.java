@@ -23,6 +23,8 @@ public class KakaoApi {
         return BuildConfig.KAKAO_REST_KEY != null && !BuildConfig.KAKAO_REST_KEY.isEmpty();
     }
 
+    // Retrofit 같은 라이브러리 없이 HttpURLConnection으로 카카오 REST API를 직접 호출한다.
+    // API 키는 Authorization 헤더에 "KakaoAK ..." 형식으로 넣고, 받은 JSON을 org.json으로 파싱한다.
     /** 카카오 책 검색. 네트워크 스레드에서 호출할 것. 실패 시 null. */
     public static List<Book> search(String query) {
         HttpURLConnection conn = null;

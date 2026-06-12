@@ -91,6 +91,8 @@ public class SearchActivity extends AppCompatActivity {
         }
 
         showStatus("검색 중...");
+        // 네트워크 요청은 UI 스레드에서 실행할 수 없다. ExecutorService로 백그라운드에서
+        // 검색하고, 결과가 오면 Handler(main.post)로 UI 스레드에 돌아와 목록을 갱신한다.
         executor.execute(() -> {
             // 실제 HTTP 요청과 JSON 파싱은 KakaoApi.search()에서 처리한다.
             List<Book> list = KakaoApi.search(query);

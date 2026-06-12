@@ -18,14 +18,16 @@ public class ImageLoader {
     private static final ExecutorService POOL = Executors.newFixedThreadPool(3);
     private static final Handler MAIN = new Handler(Looper.getMainLooper());
 
+    // Glide·Picasso 없이 표지 URL을 직접 다운로드한다. ExecutorService로 받아 Handler로 화면에 적용한다.
     public static void load(ImageView view, String url) {
-        // ListView는 화면 밖으로 나간 ImageView를 재사용하므로 현재 URL을 tag에 저장해 둔다.
+        // ListView는 화면 밖으로 나간 ImageView를 재사용한다. 그래서 요청 시점의 URL을 tag에 저장해 둔다.
         view.setTag(url);
         POOL.execute(() -> {
             Bitmap bmp = download(url);
             if (bmp == null) return;
             MAIN.post(() -> {
-                // 재활용으로 다른 항목이 되었으면 적용하지 않음
+                // 다운로드가 끝났을 때 tag가 바뀌었으면(다른 책으로 재활용됨) 적용하지 않는다.
+                // 스크롤 중 엉뚱한 책 표지가 잠깐 뜨는 문제를 막는 장치다.
                 if (url.equals(view.getTag())) {
                     view.setImageBitmap(bmp);
                 }

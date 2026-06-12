@@ -42,6 +42,8 @@ public class WriteReviewActivity extends AppCompatActivity {
         TextView tvBookTitle = findViewById(R.id.tvBookTitle);
         RatingBar rbInput = findViewById(R.id.rbInput);
         EditText etContent = findViewById(R.id.etContent);
+        // "스포일러 포함" 체크박스. 여기서 켠 값이 리뷰와 함께 DB에 저장되어,
+        // 나중에 목록에서 그 리뷰를 가릴지 말지 판단하는 기준이 된다.
         CheckBox cbSpoiler = findViewById(R.id.cbSpoiler);
         Button btnSave = findViewById(R.id.btnSave);
 
@@ -69,7 +71,9 @@ public class WriteReviewActivity extends AppCompatActivity {
             }
 
             String today = new SimpleDateFormat("yyyy.MM.dd", Locale.KOREA).format(new Date());
-            // 현재 로그인 사용자의 id와 nickname은 Session에서 가져와 reviews 테이블에 함께 저장한다.
+            // 입력한 별점/한줄평/스포일러 여부를 reviews 테이블에 한 줄 추가한다.
+            // 로그인 사용자의 id·닉네임은 Session에서 가져온다. 이 한 줄이 추가되면
+            // 상세 화면으로 돌아갈 때 집계 쿼리가 다시 돌아 평균 별점·리뷰 수가 곧바로 바뀐다.
             DBHelper.get(this).insertReview(
                     bookId,
                     Session.userId(this),

@@ -46,7 +46,8 @@ public class MyReviewActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // 현재 로그인한 사용자 id를 Session에서 가져와 그 사용자가 작성한 리뷰만 조회한다.
+        // 화면이 보일 때마다 현재 로그인 사용자 id로 "내가 쓴 리뷰"만 모아서 보여준다.
+        // getMyReviews는 책 제목/표지까지 JOIN해서 가져오므로 한 페이지에서 과거 리뷰를 회상할 수 있다.
         long uid = Session.userId(this);
         List<Review> myReviews = DBHelper.get(this).getMyReviews(uid);
         adapter.setReviews(myReviews);

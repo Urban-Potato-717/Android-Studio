@@ -17,6 +17,8 @@ public class Session {
         return c.getSharedPreferences(PREF, Context.MODE_PRIVATE);
     }
 
+    // 로그인 상태 유지: 로그인에 성공하면 사용자 정보를 SharedPreferences에 저장한다.
+    // 그래서 앱을 껐다 켜도 로그인이 유지되고, isLoggedIn()으로 자동 로그인을 판단한다.
     public static void login(Context c, User u) {
         prefs(c).edit()
                 .putLong(K_UID, u.id)

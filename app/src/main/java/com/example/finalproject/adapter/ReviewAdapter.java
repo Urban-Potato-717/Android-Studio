@@ -68,16 +68,20 @@ public class ReviewAdapter extends BaseAdapter {
         tvContent.setText(r.content);
         tvHelpful.setText(context.getString(R.string.helpful_format, r.helpfulCount));
 
-        // isSpoiler는 DB에 저장된 값이고, revealed는 현재 화면에서만 쓰는 임시 공개 상태이다.
-        // 스포일러인데 아직 공개하지 않았다면 실제 내용 영역을 숨기고 안내 영역을 보여준다.
+        // 두 상태를 구분한다. isSpoiler = DB에 저장된 값(스포일러 리뷰인가),
+        //        revealed = 화면에서만 쓰는 임시 값(지금 펼쳐봤는가, DB에 저장 안 함).
+        //        스포일러인데 아직 안 펼쳤으면(blinded) 실제 내용을 숨기고 가림막 안내를 보여준다.
         boolean blinded = r.isSpoiler && !r.revealed;
         if (blinded) {
-            groupContent.setVisibility(View.GONE);
-            groupSpoiler.setVisibility(View.VISIBLE);
+            groupContent.setVisibility(View.GONE);     // 실제 리뷰 내용 숨김
+            groupSpoiler.setVisibility(View.VISIBLE);  // "스포일러입니다, 탭하세요" 안내 표시
             convertView.setOnClickListener(v -> showSpoilerDialog(r));
         } else {
             groupContent.setVisibility(View.VISIBLE);
             groupSpoiler.setVisibility(View.GONE);
+            // ListView는 화면 밖으로 나간 줄을 재활용한다. 예전에 스포일러였던 줄이
+            //        일반 리뷰 자리에 재활용될 수 있으므로, 클릭 리스너를 반드시 제거해야
+            //        엉뚱한 줄에서 다이얼로그가 뜨지 않는다.
             convertView.setOnClickListener(null);
             convertView.setClickable(false);
         }
@@ -86,8 +90,9 @@ public class ReviewAdapter extends BaseAdapter {
     }
 
     private void showSpoilerDialog(Review r) {
-        // 사용자가 확인을 누른 경우에만 revealed를 true로 바꾸고 리스트를 다시 그린다.
-        // revealed는 DB에 저장하지 않으므로 화면을 새로 열면 다시 가려진 상태가 된다.
+        // 가림막을 탭하면 AlertDialog로 "스포일러 주의" 경고를 띄운다.
+        // 확인을 누른 경우에만 revealed를 true로 바꾸고 notifyDataSetChanged()로 다시 그려 펼친다.
+        // revealed는 DB에 저장하지 않으므로, 화면을 새로 열면 다시 가려진 상태로 돌아간다.
         new AlertDialog.Builder(context)
                 .setTitle(R.string.spoiler_dialog_title)
                 .setMessage(R.string.spoiler_dialog_msg)
