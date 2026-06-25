@@ -2,4 +2,18 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- BookLog 디자인 색상 모음 -->
+    <color name="bg_cream">#F3EFE6</color>
+    <color name="card_white">#FFFFFFFF</color>
+    <color name="star_amber">#F5A623</color>
+    <color name="star_empty">#D9D2C5</color>
+    <color name="brand_brown">#5C4A35</color>
+    <color name="text_title">#2E2A24</color>
+    <color name="text_body">#6B5E4C</color>
+    <color name="text_sub">#9C9281</color>
+    <color name="chip_bg">#E7E0D2</color>
+    <color name="divider">#ECE6DA</color>
+    <color name="spoiler_red">#C0392B</color>
+    <color name="quote_brown">#8A7A63</color>
 </resources>

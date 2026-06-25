@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/bg_card"
+    android:padding="@dimen/card_padding"
+    android:layout_marginBottom="@dimen/card_gap">
+
+    <ImageView
+        android:id="@+id/ivCover"
+        android:layout_width="@dimen/cover_w"
+        android:layout_height="@dimen/cover_h"
+        android:scaleType="centerCrop"
+        android:src="@drawable/cover_placeholder"
+        android:contentDescription="@string/popular_books" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="12dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text="제목"
+            android:textColor="@color/text_title"
+            android:textSize="@dimen/text_book_title"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvAuthor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="저자"
+            android:textColor="@color/text_body"
+            android:textSize="@dimen/text_body" />
+
+        <TextView
+            android:id="@+id/tvPublisher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="출판사"
+            android:textColor="@color/text_sub"
+            android:textSize="@dimen/text_sub" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:src="@drawable/star_amber"
+                android:contentDescription="@string/reviews" />
+
+            <TextView
+                android:id="@+id/tvRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="0.0"
+                android:textColor="@color/text_title"
+                android:textSize="@dimen/text_body"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvReviewCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="리뷰 0개"
+                android:textColor="@color/text_sub"
+                android:textSize="@dimen/text_sub" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvQuote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text="한줄평"
+            android:textColor="@color/quote_brown"
+            android:textSize="@dimen/text_sub"
+            android:textStyle="italic" />
+    </LinearLayout>
+</LinearLayout>
