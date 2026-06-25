@@ -36,6 +36,7 @@ public class Session {
         return prefs(c).getLong(K_UID, -1) != -1;
     }
 
+    // 지금 로그인 한 사람 유지시키기 (ID 저장)
     public static long userId(Context c) {
         return prefs(c).getLong(K_UID, -1);
     }
