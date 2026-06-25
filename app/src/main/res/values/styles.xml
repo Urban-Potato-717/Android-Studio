@@ -2,9 +2,7 @@
 <resources>
     <!-- 읽기 전용 작은 별점 (목록/카드용) -->
     <style name="RatingBar.Amber.Small" parent="Widget.AppCompat.RatingBar.Small">
-        <item name="android:progressDrawable">@drawable/ratingbar_amber</item>
-        <item name="android:minHeight">16dp</item>
-        <item name="android:maxHeight">16dp</item>
+        <item name="android:progressDrawable">@drawable/ratingbar_amber_sm</item>
         <item name="android:isIndicator">true</item>
         <item name="android:numStars">5</item>
         <item name="android:stepSize">0.1</item>
@@ -13,6 +11,9 @@
     <!-- 입력용 별점 (리뷰 작성) -->
     <style name="RatingBar.Amber.Input" parent="Widget.AppCompat.RatingBar">
         <item name="android:progressDrawable">@drawable/ratingbar_amber</item>
+        <item name="android:minHeight">36dp</item>
+        <item name="android:maxHeight">36dp</item>
+        <item name="android:isIndicator">false</item>
         <item name="android:numStars">5</item>
         <item name="android:stepSize">1</item>
     </style>
